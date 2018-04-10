@@ -1,0 +1,49 @@
+.HomePage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    color: white;
+}
+
+.HomePage .Content {
+    text-align: center;
+    width: 40%;
+}
+
+.HomePage .Content h1 {
+    color: var(--green);
+    
+}
+
+.HomePage button {
+    background: transparent;
+    border: 3px solid white;
+    border-radius: 20px;
+    padding: 10px 30px;
+    margin: 20px 0px 50px 0px;
+    color: white;
+    font-size: 15px;
+    transition: all 500ms;
+}
+
+.HomePage button:hover {
+    cursor: pointer;
+    color: var(--green);
+    border-color: var(--green);
+}
+
+.HomePage button:focus {
+    outline: none;
+}
+
+@media(max-width:999px) {
+    .HomePage .Content {
+        width: 90%;
+    }
+
+    .HomePage p {
+        font-size: 15px;
+    }
+}

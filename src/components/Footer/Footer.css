@@ -1,0 +1,40 @@
+footer {
+    grid-area: footer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+footer > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+footer p {
+    margin: 0 20px;
+}
+
+footer a {
+    text-decoration: none;
+    color: white;
+    transition: all 500ms;
+}
+
+footer a:hover {
+    color: var(--green);
+}
+
+footer a:focus {
+    outline: none;
+}
+
+footer a:active {
+    background: none;
+}
+
+@media(max-width: 499px) {
+    footer > div {
+        flex-direction: column;
+    }
+}
