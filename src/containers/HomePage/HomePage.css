@@ -14,7 +14,14 @@
 
 .HomePage .Content h1 {
     color: var(--green);
-    
+    -webkit-animation: anim1 0.5s ease-in-out;
+    animation: anim1 0.5s ease-in-out;
+}
+
+.HomePage .Content p,
+.HomePage .Content button {
+    -webkit-animation: anim2 1s ease-in-out;
+    animation: anim2 1s ease-in-out;
 }
 
 .HomePage button {
@@ -45,5 +52,55 @@
 
     .HomePage p {
         font-size: 15px;
+    }
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes anim1 {
+    from {
+        transform: translateY(20px);
+        opacity: 0;}
+    to {
+        transform: translateY(0px);
+        opacity: 1;}
+}
+
+/* Standard syntax */
+@keyframes anim1 {
+    from {
+        transform: translateY(20px);
+        opacity: 0;}
+    to {
+        transform: translateY(0px);
+        opacity: 1;}
+}
+
+@-webkit-keyframes anim2 {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    40% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+
+@keyframes anim2 {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    40% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0px);
+        opacity: 1;
     }
 }
