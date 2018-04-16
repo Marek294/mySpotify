@@ -1,9 +1,35 @@
 import React, { Component } from 'react';
+import querystring from 'querystring';
 import Background from '../../components/Background/Background';
 
 import classes from './HomePage.css';
 
 class HomePage extends Component {
+    // generateRandomString(length) {
+    //     var text = '';
+    //     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        
+    //     for (var i = 0; i < length; i++) {
+    //         text += possible.charAt(Math.floor(Math.random() * possible.length));
+    //     }
+    //     return text;
+    // };
+
+    login = () => {
+        // const state = this.generateRandomString(16);
+
+        // your application requests authorization
+        var scope = 'user-read-private user-read-email user-read-playback-state';
+        window.location = 'https://accounts.spotify.com/authorize?' +
+            querystring.stringify({
+                response_type: 'code',
+                client_id: '01d4a52817f5479885eaa683dfb61d87',
+                scope: scope,
+                redirect_uri: 'http://localhost:3000/callback',
+                // state: state
+            });
+    }
+
     render() {
         return (
             <section className={classes.HomePage} >
