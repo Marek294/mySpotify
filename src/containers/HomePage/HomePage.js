@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import querystring from 'querystring';
 import Background from '../../components/Background/Background';
 
-import classes from './HomePage.css';
+// import classes from './HomePage.css';
+import './HomePage.css';
 
 class HomePage extends Component {
     // generateRandomString(length) {
@@ -32,12 +33,12 @@ class HomePage extends Component {
 
     render() {
         return (
-            <section className={classes.HomePage} >
+            <section className='homepage' >
                 <Background />
-                <div className={classes.Content}>
-                    <h1>Muzyka bliżej ciebie</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    <a href="http://localhost:8888/login"><button>Zaloguj się</button></a>
+                <div className='homepage__content'>
+                    <h1 className='content__title'>Muzyka bliżej ciebie</h1>
+                    <p className='content__text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <a href="http://localhost:8888/login"><button className='content__button'>Zaloguj się</button></a>
                 </div>
             </section>
         );

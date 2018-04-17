@@ -34,8 +34,8 @@ class Browse extends Component {
 
         // Playback status updates
         player.addListener('player_state_changed', state => { 
-            if( state.paused ) this.stopTimer();
-            else this.startTimer();
+            // if( state.paused ) this.stopTimer();
+            // else this.startTimer();
 
             console.log(state);
 
@@ -206,9 +206,9 @@ class Browse extends Component {
         return (
             <React.Fragment>
 
-            { Object.keys(state).length === 0 ? <Loader /> : 
+            { Object.keys(player).length === 0 ? <Loader /> : 
                 <div className={classes.Browse}>
-                    <CurrentlyPlaying state={state} />
+                    {/* <CurrentlyPlaying state={state} /> */}
                     <Player
                         state={state}
                         player={player}

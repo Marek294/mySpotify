@@ -1,20 +1,20 @@
-.Logo {
+.logo {
     text-decoration: none;
     color: white;
 }
 
-.Logo:focus {
+.logo:focus {
     outline: none;
 }
 
-.Logo:active {
+.logo:active {
     background: none;
 }
 
-.Logo h1 {
+.logo__text {
     margin: 0;
 }
 
-.Logo span {
+.logo__text--color {
     color: var(--green);
 }

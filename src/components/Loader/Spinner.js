@@ -1,15 +1,15 @@
 import React from 'react';
 
-import classes from './Spinner.css';
+import './Spinner.css';
 
 const Spinner = () => {
     return (
-        <div className={classes.Spinner}>
-            <div className={classes.Rect1}></div>
-            <div className={classes.Rect2}></div>
-            <div className={classes.Rect3}></div>
-            <div className={classes.Rect4}></div>
-            <div className={classes.Rect5}></div>
+        <div className='spinner'>
+            <div className='spinner__rectangle spinner__rectangle--rect1'></div>
+            <div className='spinner__rectangle spinner__rectangle--rect2'></div>
+            <div className='spinner__rectangle spinner__rectangle--rect3'></div>
+            <div className='spinner__rectangle spinner__rectangle--rect4'></div>
+            <div className='spinner__rectangle spinner__rectangle--rect5'></div>
         </div>
     );
 };

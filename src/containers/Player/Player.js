@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Range from '../../components/Range/Range';
 import { play, pause, previous, next } from '../../actions/player';
 
-import classes from './Player.css';
+import './Player.css';
 
 class Player extends Component {
     state = {
@@ -23,17 +24,17 @@ class Player extends Component {
         })
     }
 
-    changeVolume = e => {
+    changeVolume = value => {
         this.setState({
-            volume: e.target.value
+            volume: value
         })
 
-        this.props.setVolume(e.target.value);
+        this.props.setVolume(value);
     }
 
-    changePosition = e => {
+    changePosition = value => {
         this.setState({
-            position: parseInt(e.target.value, 10)
+            position: value
         })
     }
 
@@ -59,12 +60,20 @@ class Player extends Component {
         const { volume, position, duration } = this.state;
 
         return (
-            <div className={classes.Player}>
-                <button onClick={this.previousTrack}>Previous</button>
-                <button onClick={this.tooglePlay}>Play/Pause</button>
-                <button onClick={this.nextTrack}>Next</button>
-                <input name="volume" type="range" onChange={this.changeVolume} value={volume} />
-                <input name="progress" type="range" min="0" max={duration} onChange={this.changePosition} onMouseUp={this.seek} value={position} />
+            <div className='player'>
+                <div className='player__leftside'>
+                </div>
+                <div className='player__center'>
+                    <div className='center__buttons'>
+                        <button onClick={this.previousTrack} className='buttons__button'><i className="button__icon fas fa-step-backward"></i></button>
+                        <button onClick={this.tooglePlay} className='buttons__button buttons__button--play'><i className="button__icon fas fa-play"></i></button>
+                        <button onClick={this.nextTrack} className='buttons__button'><i className="button__icon fas fa-step-forward"></i></button>
+                    </div>
+                    <Range max={duration} width='100%' value={position} onChange={this.changePosition} onMouseUp={this.seek} />
+                </div>
+                <div className='player__rightside'>
+                    <Range max={100} width='200px' value={volume} onChange={this.changeVolume} />
+                </div>
             </div>
         );
     }

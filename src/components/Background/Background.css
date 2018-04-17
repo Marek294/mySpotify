@@ -1,4 +1,4 @@
-.Background {
+.background {
     background: url('../../images/background.jpg');
     background-size: cover;
 
@@ -11,7 +11,7 @@
     bottom: 0;
 }
 
-.Background .Layer {
+.background__layer {
     background: #1db93f; /* Old browsers */
     background: -moz-linear-gradient(-45deg, #667eea 0%, #764ba2 100%); /* FF3.6-15 */
     background: -webkit-linear-gradient(-45deg, #667eea 0%,#764ba2 100%); /* Chrome10-25,Safari5.1-6 */
@@ -30,7 +30,7 @@
 }
 
 @media(max-width: 799px) {
-    .Background {
+    .background {
         background: none;
     }
 }

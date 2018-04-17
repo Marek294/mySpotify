@@ -1,40 +1,40 @@
-footer {
+.footer {
     grid-area: footer;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-footer > div {
+.footer__block {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-footer p {
+.block__item {
     margin: 0 20px;
 }
 
-footer a {
+.block__link {
     text-decoration: none;
     color: white;
     transition: all 500ms;
 }
 
-footer a:hover {
+.block__link:hover {
     color: var(--green);
 }
 
-footer a:focus {
+.block__link:focus {
     outline: none;
 }
 
-footer a:active {
+.block__link:active {
     background: none;
 }
 
 @media(max-width: 499px) {
-    footer > div {
+    .footer__block {
         flex-direction: column;
     }
 }

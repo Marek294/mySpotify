@@ -1,11 +1,11 @@
 import React from 'react';
 
-import classes from './Background.css';
+import './Background.css';
 
 const Background = () => {
     return (
-        <div className={classes.Background}>
-            <div className={classes.Layer}></div>
+        <div className='background'>
+            <div className='background__layer'></div>
         </div>
     );
 };
