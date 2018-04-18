@@ -7,6 +7,7 @@ class Range extends Component {
     onMouseDown = e => {
         e.preventDefault();
 
+        this.calcValue(e);
         document.addEventListener('mousemove', this.onMouseMove);
         document.addEventListener('mouseup', this.onMouseUp);
     }
@@ -18,7 +19,9 @@ class Range extends Component {
         if(this.props.onMouseUp) this.props.onMouseUp();
     }
 
-    onMouseMove = e => {
+    onMouseMove = e => this.calcValue(e);
+
+    calcValue = e => {
         const { range } = this.refs;
 
         let value;
