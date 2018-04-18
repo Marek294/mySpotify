@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import CurrentlyPlaying from '../../components/CurrentlyPlaying/CurrentlyPlaying';
 import Player from '../Player/Player';
 import Loader from '../../components/Loader/Spinner';
-import { getPlayer, play } from '../../actions/player';
+import { getPlayer, play, currentlyPlaying } from '../../actions/player';
 import { logout } from '../../actions/auth';
 import { getUserSavedTracks } from '../../actions/tracks';
 
@@ -11,15 +10,15 @@ import classes from './Browse.css';
 
 async function waitForSpotifyWebPlaybackSDKToLoad () {
     return new Promise(resolve => {
-      if (window.Spotify) {
-        resolve(window.Spotify);
-      } else {
-        window.onSpotifyWebPlaybackSDKReady = () => {
-          resolve(window.Spotify);
-        };
-      }
+        if (window.Spotify) {
+            resolve(window.Spotify);
+        } else {
+            window.onSpotifyWebPlaybackSDKReady = () => {
+                resolve(window.Spotify);
+            };
+        }
     });
-  };
+};
 
 class Browse extends Component {
     state = {
@@ -52,39 +51,41 @@ class Browse extends Component {
             player.addListener('playback_error', ({ message }) => { console.error(message); });
 
             // Playback status updates
-            player.addListener('player_state_changed', state => { 
+            player.addListener('player_state_changed', state => {
                 // if( state.paused ) this.stopTimer();
                 // else this.startTimer();
 
-                console.log(state);
-
-                this.setState({ 
+                this.setState({
                     state
-                }) 
+                });
             });
 
             // Ready
             player.addListener('ready', ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
 
-                this.props.getUserSavedTracks()
-                    .then(data => {
-                        console.log(data);
 
-                        const uris = data.items.map(item => {
-                            return item.track.uri;
-                        })
+                (async () => {
 
-                        // this.playSong({
-                        //     uris,
-                        //     playerInstance: player
-                        // });
+                    const savedTracks = await this.props.getUserSavedTracks();
+                    const currentlyPlaying = await this.props.currentlyPlaying();
 
-                        this.setState({
-                            player,
-                            volume: player._options.volume*100
-                        })
-                    })         
+                    const uris = savedTracks.items.map(item => {
+                        return item.track.uri;
+                    })
+
+                    // this.playSong({
+                    //     uris,
+                    //     playerInstance: player
+                    // });
+
+                    this.setState({
+                        player,
+                        volume: player._options.volume*100,
+                        currentlyPlaying
+                    })
+                })();
+         
             });
 
             // Connect to the player!
@@ -136,16 +137,6 @@ class Browse extends Component {
         this.setState({
             trackTimer: ''
         })
-    }
-
-    handleScriptLoad = () => {
-        window.onSpotifyWebPlaybackSDKReady = () => {
-            this.onSpotifyWebPlaybackSDKReady();
-          };
-    }
-
-    handleScriptError = () => {
-        console.log('Something went wrong');
     }
 
     getCurrentState = () => {
@@ -223,14 +214,13 @@ class Browse extends Component {
     }
 
     render() {
-        const { player, state, volume } = this.state;
+        const { player, state, volume, currentlyPlaying } = this.state;
 
         return (
             <React.Fragment>
 
             { Object.keys(player).length === 0 ? <Loader /> : 
                 <div className={classes.Browse}>
-                    {/* <CurrentlyPlaying state={state} /> */}
                     <Player
                         state={state}
                         player={player}
@@ -239,7 +229,8 @@ class Browse extends Component {
                         togglePlay={this.togglePlay}
                         nextTrack={this.nextTrack}
                         previousTrack={this.previousTrack}
-                        volume={volume} />
+                        volume={volume}
+                        currentlyPlaying={currentlyPlaying} />
                 </div> }
             </React.Fragment>
         );
@@ -252,4 +243,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { getUserSavedTracks, getPlayer, play, logout })(Browse);
+export default connect(mapStateToProps, { getUserSavedTracks, currentlyPlaying, getPlayer, play, logout })(Browse);

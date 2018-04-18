@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Range from '../../components/Range/Range';
+import CurrentlyPlaying from '../../components/CurrentlyPlaying/CurrentlyPlaying';
 import { play, pause, previous, next } from '../../actions/player';
 
 import './Player.css';
@@ -13,9 +14,38 @@ class Player extends Component {
         duration: 0
     }
 
+    componentDidMount() {
+        let { volume, state, currentlyPlaying } = this.props;
+        let position, duration;
+
+        if(state) ({ position, duration } = state);
+        if(currentlyPlaying) {
+            const { progress_ms } = currentlyPlaying;
+            position = progress_ms;
+
+            const { item: { duration_ms} } = currentlyPlaying;
+            duration = duration_ms;
+        }
+
+        this.setState({
+            position,
+            duration,
+            volume,
+        })
+    }
+
     componentWillReceiveProps(nextProps) {
-        let { volume } = nextProps;
-        const { position, duration } = nextProps.state;
+        let { volume, state, currentlyPlaying } = nextProps;
+        let position, duration;
+
+        if(state) ({ position, duration } = state);
+        if(currentlyPlaying) {
+            const { progress_ms } = currentlyPlaying;
+            position = progress_ms;
+
+            const { item: { duration_ms} } = currentlyPlaying;
+            duration = duration_ms;
+        }
 
         this.setState({
             position,
@@ -58,10 +88,14 @@ class Player extends Component {
 
     render() {
         const { volume, position, duration } = this.state;
+        const { currentlyPlaying, state } = this.props;
+
+        console.log(position, duration, currentlyPlaying);
 
         return (
             <div className='player'>
                 <div className='player__leftside'>
+                    <CurrentlyPlaying currentlyPlaying={currentlyPlaying} state={state} />
                 </div>
                 <div className='player__center'>
                     <div className='center__buttons'>
