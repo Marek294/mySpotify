@@ -41,28 +41,22 @@ class CurrentlyPlaying extends Component {
     }
 
     render() {
-        const { currentlyPlaying, state } = this.props;
+        const { trackData } = this.props;
     
-        let item,
+        let images,
+            artists,
+            displayArtists,
+            name,
             display = true;
 
-        if(currentlyPlaying) ({ item } = currentlyPlaying);
-        if(state.track_window) item = state.track_window.current_track;
-        if(!currentlyPlaying && !state.track_window) display = false;
+        if(Object.keys(trackData).length > 0) {
+            ({ images, artists, name } = trackData)
+        } else display = false;
 
-
-        let displayArtists;
-        let name, artists;
-        let images;
-
-        if(display) {
-            ({ name, artists, album: { images } } = item);
-
-            displayArtists = artists ? artists.map((item,i) => {
+        displayArtists = 
+            artists ? artists.map((item,i) => {
                 return item.name;
             }) : null;
-
-        }
 
         return (
             display ?

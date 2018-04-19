@@ -23,10 +23,10 @@ async function waitForSpotifyWebPlaybackSDKToLoad () {
 class Browse extends Component {
     state = {
         player: {},
+        trackData: {},
         device_id: '',
         state: {},
-        volume: 0,
-        trackTimer: ''
+        volume: 0
     }
 
     componentDidMount() {
@@ -52,22 +52,27 @@ class Browse extends Component {
 
             // Playback status updates
             player.addListener('player_state_changed', state => {
-                // if( state.paused ) this.stopTimer();
-                // else this.startTimer();
+                (async () => {
+                    const volume = await player.getVolume();
+                    
+                    this.getTrackData(player);
 
-                this.setState({
-                    state
-                });
+                    this.setState({
+                        state,
+                        volume
+                    });
+                })();
             });
 
             // Ready
             player.addListener('ready', ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
 
-
                 (async () => {
 
                     const savedTracks = await this.props.getUserSavedTracks();
+
+                    this.getTrackData(player);
                     const currentlyPlaying = await this.props.currentlyPlaying();
 
                     const uris = savedTracks.items.map(item => {
@@ -81,7 +86,7 @@ class Browse extends Component {
 
                     this.setState({
                         player,
-                        volume: player._options.volume*100,
+                        volume: player._options.volume,
                         currentlyPlaying
                     })
                 })();
@@ -93,11 +98,6 @@ class Browse extends Component {
 
           })();
     }
-    
-
-    // playSong = (body) => {
-    //     this.props.play(body);
-    // }
 
     playSong = ({
         uris,
@@ -118,56 +118,111 @@ class Browse extends Component {
                 });
             });
     };
-      
-    startTimer = () => {
-        const { trackTimer } = this.state;
 
-        if(!trackTimer) {
-            this.setState({
-                trackTimer: setInterval(this.getCurrentState, 1000)
-            })
-        }
-    }
+    getTrackData = player => {
+        (async ()=> {
+            const state = await player.getCurrentState();
+            const volume = await player.getVolume();
+            const currentPlayer = await this.props.getPlayer();
 
-    stopTimer = () => {
-        const { trackTimer } = this.state;
+            if(state) {
+                const { 
+                    paused,
+                    track_window: {
+                        current_track: { 
+                            album: { images },
+                            artists,
+                            name,
+                            duration_ms 
+                        }
+                    },
+                    position: progress_ms
+                } = state;
 
-        clearInterval(trackTimer);
+                const volume_percent = volume*100;
 
-        this.setState({
-            trackTimer: ''
-        })
+                this.setState({
+                    trackData: {
+                        is_playing: !paused,
+                        images,
+                        artists,
+                        name,
+                        duration_ms,
+                        progress_ms,
+                        volume_percent
+                    }
+                })
+
+            } else {
+                if(currentPlayer) {
+                    const { 
+                        is_playing,
+                        item: { 
+                            album: { images },
+                            artists,
+                            name,
+                            duration_ms 
+                        },
+                        progress_ms,
+                        device: {
+                            volume_percent
+                        } 
+                    } = player;
+
+                    this.setState({
+                        trackData: {
+                            is_playing,
+                            images,
+                            artists,
+                            name,
+                            duration_ms,
+                            progress_ms,
+                            volume_percent
+                        }
+                    });
+
+                }
+            }
+        })()
     }
 
     getCurrentState = () => {
         const { player } = this.state;
 
-        const p1 = player.getCurrentState()
-        const p2 = player.getVolume()
+        (async () => {
 
-        Promise.all([p1, p2])
-            .then(values => {
-                if (!values[0]) {
-                    console.error('User is not playing music through the Web Playback SDK');
-                    return;
-                  } else {
-                      this.setState({
-                          state: values[0],
-                          volume: values[1]*100
-                      });
-                  }
-            })
+            const state = await player.getCurrentState();
+            const volume = await player.getVolume();
 
-        // player.getCurrentState().then(state => {
-        //     if (!state) {
-        //       console.error('User is not playing music through the Web Playback SDK');
-        //       return;
-        //     } else {
-        //         this.setState({
-        //             state
-        //         });
-        //     }
-        //   });
+            if(state) {
+                const { 
+                    paused,
+                    track_window: {
+                        current_track: { 
+                            album: { images },
+                            artists,
+                            name,
+                            duration_ms 
+                        }
+                    },
+                    position: progress_ms
+                } = state;
+
+                const volume_percent = volume*100;
+
+                this.setState({
+                    trackData: {
+                        is_playing: !paused,
+                        images,
+                        artists,
+                        name,
+                        duration_ms,
+                        progress_ms,
+                        volume_percent
+                    }
+                })
+            }
+        })()
     }
 
     getVolume = () => {
@@ -214,7 +269,7 @@ class Browse extends Component {
     }
 
     render() {
-        const { player, state, volume, currentlyPlaying } = this.state;
+        const { player, trackData } = this.state;
 
         return (
             <React.Fragment>
@@ -222,15 +277,13 @@ class Browse extends Component {
             { Object.keys(player).length === 0 ? <Loader /> : 
                 <div className={classes.Browse}>
                     <Player
-                        state={state}
-                        player={player}
+                        trackData={trackData}
                         setVolume={this.setVolume}
                         seek={this.seek}
                         togglePlay={this.togglePlay}
                         nextTrack={this.nextTrack}
-                        previousTrack={this.previousTrack}
-                        volume={volume}
-                        currentlyPlaying={currentlyPlaying} />
+                        getCurrentState={this.getCurrentState}
+                        previousTrack={this.previousTrack} />
                 </div> }
             </React.Fragment>
         );
