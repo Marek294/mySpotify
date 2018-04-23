@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Player from '../Player/Player';
+import Sidebar from '../Sidebar/Sidebar';
 import Loader from '../../components/Loader/Spinner';
 import { getPlayer, play, currentlyPlaying } from '../../actions/player';
 import { logout } from '../../actions/auth';
 import { getUserSavedTracks } from '../../actions/tracks';
 
-import classes from './Browse.css';
+import './Browse.css';
 
 async function waitForSpotifyWebPlaybackSDKToLoad () {
     return new Promise(resolve => {
@@ -167,7 +168,7 @@ class Browse extends Component {
                         device: {
                             volume_percent
                         } 
-                    } = player;
+                    } = currentPlayer;
 
                     this.setState({
                         trackData: {
@@ -272,10 +273,9 @@ class Browse extends Component {
         const { player, trackData } = this.state;
 
         return (
-            <React.Fragment>
-
-            { Object.keys(player).length === 0 ? <Loader /> : 
-                <div className={classes.Browse}>
+            Object.keys(player).length === 0 ? <Loader /> : 
+                <div className='browse'>
+                    <Sidebar />
                     <Player
                         trackData={trackData}
                         setVolume={this.setVolume}
@@ -284,8 +284,8 @@ class Browse extends Component {
                         nextTrack={this.nextTrack}
                         getCurrentState={this.getCurrentState}
                         previousTrack={this.previousTrack} />
-                </div> }
-            </React.Fragment>
+                    {this.props.children}
+                </div>
         );
     }
 }

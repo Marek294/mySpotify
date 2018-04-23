@@ -5,7 +5,6 @@ import {
 } from 'react-router-dom';
 import UserRoute from './routes/UserRoute';
 import GuestRoute from './routes/GuestRoute';
-import Layout from './components/Layout/Layout';
 import HomePage from './containers/HomePage/HomePage';
 import Browse from './containers/Browse/Browse';
 import Callback from './containers/Callback/Callback';
@@ -16,14 +15,12 @@ import './colors.css';
 class App extends Component {
   render() {
     return (
-      <Layout>
-        <Switch>
-            <GuestRoute exact path="/" component={HomePage}/>
-            <UserRoute exact path="/browse" component={Browse}/>
-            <GuestRoute exact path="/callback" component={Callback}/>
-            <Route component={NoMatch}/>
-        </Switch>
-      </Layout>
+      <Switch>
+          <GuestRoute exact path="/" component={HomePage}/>
+          <UserRoute exact path="/browse" component={Browse} />
+          <GuestRoute exact path="/callback" component={Callback}/>
+          <Route component={NoMatch}/>
+      </Switch>
     );
   }
 }

@@ -18,11 +18,12 @@ class CurrentlyPlaying extends Component {
 
             const element = e.target;
             const to = e.target.scrollWidth;
-            const duration = 5000;
             const scrollDirection = 'scrollLeft';
 
             const name = e.target.innerHTML;
             e.target.innerHTML = name + ' ' + name;
+
+            const duration = 1000/49.6 * (element.scrollWidth - element.offsetWidth);  //49.6px per sec
 
             scrollTo({
                 element,
