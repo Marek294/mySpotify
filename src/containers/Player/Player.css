@@ -1,74 +1,15 @@
 .player {
-    grid-area: player;
-
-    background-color: #202224;
-    padding: 20px;
-
     display: grid;
+    min-height: 100vh;
 
-    grid-template-columns: 30% auto 30%;
+    grid-template-columns: 250px auto 20%;
+    grid-template-rows: auto 15%;
+    grid-template-areas: "sidebar content friends"
+                         "player player player";
+
+    background-color: transparent;
 }
 
-.player__leftside {
-    grid-column-start: 1;
-    grid-column-end: 2;
-}
-
-.player__center {
-    grid-column-start: 2;
-    grid-column-end: 3;
-}
-
-.center__progress {
-    width: 100%;
-}
-
-.center__buttons {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.buttons__button {
-    width: 50px;
-    height: 50px;
-    background: transparent;
-    border: none;
-    color: rgba(255,255,255,0.5);
-}
-
-.buttons__button:active {
-    padding: 0;
-}
-
-.buttons__button:active .button__icon {
-    font-size: 15px;
-}
-
-.button__icon {
-    font-size: 18px;
-}
-
-.buttons__button:focus {
-    outline: 0;
-}
-
-.buttons__button::-moz-focus-inner {
-    border: 0;
-}
-
-.buttons__button--play {
-    color: white;
-    border: 2px solid white;
-    border-radius: 50%;
-}
-
-.player__rightside {
-    grid-column-start: 3;
-    grid-column-end: 3;
-
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-left: 200px;
+.player__content {
+    grid-area: content;
 }

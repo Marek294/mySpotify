@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 
-import './Content.css';
-
-class Content extends Component {
+class NewReleases extends Component {
     render() {
         return (
             <div>
-                asd
+                <h1>Nowe wydania</h1>
             </div>
         );
     }
 }
 
-export default Content;
+export default NewReleases;
