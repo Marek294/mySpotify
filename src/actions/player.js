@@ -6,7 +6,7 @@ export const recentlyPlayed = () => () => api.Player.recentlyPlayed();
 
 export const getPlayer = () => () => api.Player.getPlayer();
 
-export const play = (body) => () => api.Player.play(body);
+export const play = (body, device_id) => () => api.Player.play(body, device_id);
 
 export const pause = () => () => api.Player.pause();
 

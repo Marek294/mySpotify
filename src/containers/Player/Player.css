@@ -4,7 +4,7 @@
 
     grid-template-columns: 250px auto 20%;
     grid-template-rows: auto 15%;
-    grid-template-areas: "sidebar content friends"
+    grid-template-areas: "sidebar content content"
                          "player player player";
 
     background-color: transparent;
@@ -12,4 +12,7 @@
 
 .player__content {
     grid-area: content;
+    overflow: hidden;
+    overflow-y: scroll;
+    padding: 20px 50px;
 }

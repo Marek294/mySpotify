@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Switch } from 'react-router-dom';
+import { Redirect, Switch, Route } from 'react-router-dom';
 import UserRoute from '../../routes/UserRoute';
 import Browse from '../Browse/Browse';
 import Collection from '../Collection/Collection';
 import Playback from '../Playback/Playback';
-import Sidebar from '../Sidebar/Sidebar';
+import Sidebar from '../../components/Sidebar/Sidebar';
+import Playlist from '../../containers/Playlist/Playlist';
 import Loader from '../../components/Loader/Spinner';
 import { getPlayer, play, currentlyPlaying } from '../../actions/player';
 import { logout } from '../../actions/auth';
@@ -75,14 +76,14 @@ class Player extends Component {
 
                 (async () => {
 
-                    const savedTracks = await this.props.getUserSavedTracks();
+                    // const savedTracks = await this.props.getUserSavedTracks();
 
                     this.getTrackData(player);
                     const currentlyPlaying = await this.props.currentlyPlaying();
 
-                    const uris = savedTracks.items.map(item => {
-                        return item.track.uri;
-                    })
+                    // const uris = savedTracks.items.map(item => {
+                    //     return item.track.uri;
+                    // })
 
                     // this.playSong({
                     //     uris,
@@ -104,24 +105,16 @@ class Player extends Component {
           })();
     }
 
-    playSong = ({
-        uris,
-        playerInstance: {
-            _options: {
-            getOAuthToken,
-            id
+    playSong = (context_uri) => {
+        const { 
+            player: {
+                _options: {
+                    id : device_id
+                }
             }
-        }}) => {
-            getOAuthToken(access_token => {
-                fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
-                method: 'PUT',
-                body: JSON.stringify({ uris }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${access_token}`
-                },
-                });
-            });
+         } = this.state;
+
+        this.props.play({ context_uri }, device_id);
     };
 
     getTrackData = player => {
@@ -294,6 +287,7 @@ class Player extends Component {
                     <Switch>
                         <UserRoute path='/browse' component={Browse} />
                         <UserRoute path='/collection' component={Collection} />
+                        <Route path='/user/spotify/playlist/:id' render={props => <Playlist {...props} playSong={this.playSong} />} />
                         <Redirect to='/browse' />
                     </Switch>
                     </div>

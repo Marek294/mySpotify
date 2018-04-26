@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import UserRoute from './routes/UserRoute';
 import GuestRoute from './routes/GuestRoute';
-import HomePage from './containers/HomePage/HomePage';
+import HomePage from './components/HomePage/HomePage';
 import Player from './containers/Player/Player';
 import Callback from './containers/Callback/Callback';
 
