@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Switch, Route } from 'react-router-dom';
-import UserRoute from '../../routes/UserRoute';
 import Browse from '../Browse/Browse';
 import Collection from '../Collection/Collection';
 import Playback from '../Playback/Playback';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Playlist from '../../containers/Playlist/Playlist';
 import Loader from '../../components/Loader/Spinner';
-import { getPlayer, play, currentlyPlaying } from '../../actions/player';
+import { getPlayer, play, pause, currentlyPlaying, boundPushState } from '../../actions/player';
 import { logout } from '../../actions/auth';
 import { getUserSavedTracks } from '../../actions/tracks';
 
@@ -31,7 +30,7 @@ class Player extends Component {
         player: {},
         trackData: {},
         device_id: '',
-        state: {},
+        state: null,
         volume: 0
     }
 
@@ -63,6 +62,8 @@ class Player extends Component {
                     
                     this.getTrackData(player);
 
+                    this.props.boundPushState(state);
+
                     this.setState({
                         state,
                         volume
@@ -76,19 +77,8 @@ class Player extends Component {
 
                 (async () => {
 
-                    // const savedTracks = await this.props.getUserSavedTracks();
-
                     this.getTrackData(player);
                     const currentlyPlaying = await this.props.currentlyPlaying();
-
-                    // const uris = savedTracks.items.map(item => {
-                    //     return item.track.uri;
-                    // })
-
-                    // this.playSong({
-                    //     uris,
-                    //     playerInstance: player
-                    // });
 
                     this.setState({
                         player,
@@ -105,7 +95,7 @@ class Player extends Component {
           })();
     }
 
-    playSong = (context_uri) => {
+    playSong = (context_uri, offset) => {
         const { 
             player: {
                 _options: {
@@ -114,7 +104,25 @@ class Player extends Component {
             }
          } = this.state;
 
-        this.props.play({ context_uri }, device_id);
+        this.props.play({ context_uri, offset }, device_id);
+    };
+
+    playContext = context_uri => {
+        const { 
+            player: {
+                _options: {
+                    id : device_id
+                }
+            },
+            player,
+            state
+         } = this.state;
+
+        if(state) {
+            if(state.context.uri === context_uri) player.togglePlay();
+            else this.props.play({ context_uri }, device_id);
+        } else this.props.play({ context_uri }, device_id);
+        
     };
 
     getTrackData = player => {
@@ -184,44 +192,44 @@ class Player extends Component {
         })()
     }
 
-    getCurrentState = () => {
-        const { player } = this.state;
+    // getCurrentState = () => {
+    //     const { player } = this.state;
 
-        (async () => {
+    //     (async () => {
 
-            const state = await player.getCurrentState();
-            const volume = await player.getVolume();
+    //         const state = await player.getCurrentState();
+    //         const volume = await player.getVolume();
 
-            if(state) {
-                const { 
-                    paused,
-                    track_window: {
-                        current_track: { 
-                            album: { images },
-                            artists,
-                            name,
-                            duration_ms 
-                        }
-                    },
-                    position: progress_ms
-                } = state;
+    //         if(state) {
+    //             const { 
+    //                 paused,
+    //                 track_window: {
+    //                     current_track: { 
+    //                         album: { images },
+    //                         artists,
+    //                         name,
+    //                         duration_ms 
+    //                     }
+    //                 },
+    //                 position: progress_ms
+    //             } = state;
 
-                const volume_percent = volume*100;
+    //             const volume_percent = volume*100;
 
-                this.setState({
-                    trackData: {
-                        is_playing: !paused,
-                        images,
-                        artists,
-                        name,
-                        duration_ms,
-                        progress_ms,
-                        volume_percent
-                    }
-                })
-            }
-        })()
-    }
+    //             this.setState({
+    //                 trackData: {
+    //                     is_playing: !paused,
+    //                     images,
+    //                     artists,
+    //                     name,
+    //                     duration_ms,
+    //                     progress_ms,
+    //                     volume_percent
+    //                 }
+    //             })
+    //         }
+    //     })()
+    // }
 
     getVolume = () => {
         const { player } = this.state;
@@ -246,7 +254,7 @@ class Player extends Component {
         player.seek(progress);
     }
 
-    togglePlay = () => {
+    togglePlay = context_uri => {
         const { player } = this.state;
 
         player.togglePlay();
@@ -255,9 +263,7 @@ class Player extends Component {
     nextTrack = () => {
         const { player } = this.state;
 
-        player.nextTrack().then(() => {
-            console.log('Skipped to next track!');
-        });
+        player.nextTrack();
     }
 
     previousTrack = () => {
@@ -280,13 +286,13 @@ class Player extends Component {
                         seek={this.seek}
                         togglePlay={this.togglePlay}
                         nextTrack={this.nextTrack}
-                        getCurrentState={this.getCurrentState}
+                        // getCurrentState={this.getCurrentState}
                         previousTrack={this.previousTrack} />
 
                     <div className="player__content">
                     <Switch>
-                        <UserRoute path='/browse' component={Browse} />
-                        <UserRoute path='/collection' component={Collection} />
+                        <Route path='/browse' render={props => <Browse {...props} playContext={this.playContext} />} />
+                        <Route path='/collection' component={Collection} />
                         <Route path='/user/spotify/playlist/:id' render={props => <Playlist {...props} playSong={this.playSong} />} />
                         <Redirect to='/browse' />
                     </Switch>
@@ -302,4 +308,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { getUserSavedTracks, currentlyPlaying, getPlayer, play, logout })(Player);
+export default connect(mapStateToProps, { getUserSavedTracks, currentlyPlaying, getPlayer, play, pause, logout, boundPushState })(Player);

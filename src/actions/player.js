@@ -1,4 +1,14 @@
 import api from '../api';
+import { STATE_PUSHED } from './types';
+
+export const pushState = state => {
+    return {
+        type: STATE_PUSHED,
+        state
+    }
+}
+
+export const boundPushState = state => dispatch => dispatch(pushState(state));
 
 export const currentlyPlaying = () => () => api.Player.currentlyPlaying();
 

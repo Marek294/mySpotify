@@ -32,7 +32,7 @@ class Browse extends Component {
     }
 
     render() {
-        const { match, location } = this.props;
+        const { match, location, playerState, playContext } = this.props;
         const { featured } = this.state;
 
         const active = getPath(location.pathname);
@@ -47,7 +47,7 @@ class Browse extends Component {
                </ul>
                 <div className='browse__content'>
                     <Switch>
-                        <Route exact path={`${match.url}/featured`} render={props => (<Featured {...props} featured={featured} />)} />
+                        <Route exact path={`${match.url}/featured`} render={props => (<Featured {...props} featured={featured} playerState={playerState} playContext={playContext} />)} />
                         <Route exact path={`${match.url}/genres`} component={Genres} />
                         <Route exact path={`${match.url}/newreleases`} component={NewReleases} />
                         <Route exact path={`${match.url}/discover`} component={Discover} />
@@ -59,4 +59,10 @@ class Browse extends Component {
     }
 }
 
-export default connect(null, { getFeatured })(Browse);
+const mapStateToProps = state => {
+    return {
+        playerState: state.playerState
+    }
+}
+
+export default connect(mapStateToProps, { getFeatured })(Browse);

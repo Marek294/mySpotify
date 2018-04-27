@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 import { getPlaylist } from '../../actions/playlist';
 
 import './Playlist.css';
@@ -7,10 +9,11 @@ import './Playlist.css';
 class Playlist extends Component {
     state = {
         playlist: {},
-        display: false
+        display: false,
+        currentlyPlayingId: ''
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const { 
             match: {
                 params: {
@@ -24,14 +27,39 @@ class Playlist extends Component {
 
             if(Object.keys(playlist).length) {
 
-                this.props.playSong(playlist.uri);
-
                 this.setState({
                     playlist,
                     display: true
                 })
             }
         })()
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { playerState } = nextProps;
+
+        if(playerState) {
+            const { 
+                track_window: {
+                    current_track: {
+                        id
+                    }
+                }
+            } = playerState;
+
+            const { currentlyPlayingId } = prevState;
+
+            if(id !== currentlyPlayingId) {
+                return {
+                    currentlyPlayingId: id
+                }
+            }
+            return null;
+        }
+        
+        return {
+            currentlyPlayingId: ''
+        };
     }
 
     displayDuration(duration_ms) {
@@ -42,8 +70,22 @@ class Playlist extends Component {
         return seconds < 10 ? minutes+':0'+seconds : minutes+':'+seconds;
     }
 
+    playSong = position => {
+        const { 
+            playlist: {
+                uri
+            }
+        } = this.state;
+
+        const offset = {
+            position
+        };
+
+        this.props.playSong(uri, offset);
+    }
+
     render() {
-        const { playlist, display } = this.state;
+        const { playlist, display, currentlyPlayingId } = this.state;
 
         let name, description, images, owner, tracks, tracksDisplay;
 
@@ -61,22 +103,29 @@ class Playlist extends Component {
 
                 const {
                     album: {
-                        name : albumName
+                        name : albumName,
+                        id : albumId
                     },
                     name,
                     artists,
-                    duration_ms
+                    duration_ms,
+                    id
                 } = track;
 
-                const displayArtists = artists.map(item => {
-                    return item.name;
-                }).join(', ');
+                const displayArtists = artists.map((item,i) => {
+                    return (<Link to={`/artist/${item.id}`} key={i} className='artistsAlbum__item' >{item.name}</Link>);
+                });
                 
+
                 return (
-                    <li key={i} className='tracks__track'>
+                    <li key={i} className='tracks__track' onDoubleClick={position => this.playSong(i)}>
                         <div className='track__info'>
-                            <h2 className='track__name'>{name}</h2>
-                            <p className='track__artistsAlbum'>{displayArtists} &bull; {albumName}</p>
+                            <h2 className={classnames('track__name',id === currentlyPlayingId && 'track__name--playing')}>{name}</h2>
+                            <div className='track__artistsAlbum'>
+                                <ul className='artistsAlbum__artists'>{displayArtists}</ul>
+                                <p className='artistsAlbum__separator'>&bull;</p>
+                                <Link to={`/album/${albumId}`} className='artistsAlbum__item'>{albumName}</Link>
+                            </div>
                         </div>
                         <p className='track__duration'>{this.displayDuration(duration_ms)}</p>
                     </li>
@@ -102,4 +151,10 @@ class Playlist extends Component {
     }
 }
 
-export default connect(null, { getPlaylist })(Playlist);
+const mapStateToProps = state => {
+    return {
+        playerState: state.playerState
+    }
+}
+
+export default connect(mapStateToProps, { getPlaylist })(Playlist);

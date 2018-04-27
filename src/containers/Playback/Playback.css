@@ -6,7 +6,7 @@
 
     display: grid;
 
-    grid-template-columns: 30% auto 30%;
+    grid-template-columns: 30% auto 20%;
 }
 
 .playback__leftside {
@@ -19,14 +19,22 @@
     grid-column-end: 3;
 }
 
-.center__progress {
-    width: 100%;
-}
-
 .center__buttons {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+}
+
+.center__timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.timer__time {
+    margin: 0 10px;
+    font-size: 13px;
+    color: var(--text-color);
 }
 
 .buttons__button {
@@ -35,6 +43,12 @@
     background: transparent;
     border: none;
     color: rgba(255,255,255,0.5);
+    transition: all 200ms;
+}
+
+.buttons__button:hover {
+    cursor: pointer;
+    color: white;
 }
 
 .buttons__button:active {
@@ -70,5 +84,9 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-left: 200px;
+}
+
+.rightside__volumeIcon {
+    margin: 0 10px;
+    color: var(--text-color);
 }
