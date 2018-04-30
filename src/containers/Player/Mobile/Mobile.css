@@ -1,0 +1,17 @@
+.mobile__player {
+    display: grid;
+    min-height: 100vh;
+
+    grid-template-rows: auto 25% 7%;
+    grid-template-areas: "content"
+                         "player"
+                         "nav";
+
+    background-color: transparent;
+}
+
+.mobile__player__content {
+    grid-area: content;
+    overflow: hidden;
+    overflow-y: scroll;
+}

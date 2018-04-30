@@ -1,6 +1,7 @@
 .browse {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .browse__nav {
@@ -43,4 +44,10 @@
     margin: 0 auto;
     width: 30px;
     height: 3px;
+}
+
+@media (max-width: 400px) {
+    .browse__nav {
+        flex-direction: column;
+    }
 }

@@ -21,6 +21,12 @@ class Range extends Component {
 
     onMouseMove = e => this.calcValue(e);
 
+    onTouchMove = e => this.calcTouchValue(e);
+
+    onTouchEnd = () => {
+        if(this.props.onMouseUp) this.props.onMouseUp();
+    }
+
     calcValue = e => {
         const { range } = this.refs;
 
@@ -28,6 +34,17 @@ class Range extends Component {
         if(e.clientX >= range.offsetLeft && e.clientX <= range.offsetLeft+range.offsetWidth) value = parseInt(((e.clientX - range.offsetLeft) / range.offsetWidth ) * this.props.max, 10);
         if(e.clientX < range.offsetLeft) value = 0;
         if(e.clientX > range.offsetLeft+range.offsetWidth) value = this.props.max;
+        
+        this.props.onChange(value);
+    }
+
+    calcTouchValue = e => {
+        const { range } = this.refs;
+
+        let value;
+        if(e.touches[0].clientX >= range.offsetLeft && e.touches[0].clientX <= range.offsetLeft+range.offsetWidth) value = parseInt(((e.touches[0].clientX - range.offsetLeft) / range.offsetWidth ) * this.props.max, 10);
+        if(e.touches[0].clientX < range.offsetLeft) value = 0;
+        if(e.touches[0].clientX > range.offsetLeft+range.offsetWidth) value = this.props.max;
         
         this.props.onChange(value);
     }
@@ -44,7 +61,7 @@ class Range extends Component {
         }
 
         return (
-            <div className='range' ref='range' onMouseDown={this.onMouseDown} style={range__styles}>
+            <div className='range' ref='range' onMouseDown={this.onMouseDown} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd} style={range__styles}>
                 <div className='range__track'></div>
                 <div className='range__thumb'></div>
                 <div className='range__progress' style={progress__styles}></div>

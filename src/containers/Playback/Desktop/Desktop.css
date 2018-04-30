@@ -1,0 +1,92 @@
+.desktop__playback {
+    grid-area: player;
+
+    background-color: #202224;
+    padding: 20px;
+
+    display: grid;
+
+    grid-template-columns: 30% auto 20%;
+}
+
+.desktop__playback__leftside {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.desktop__playback__center {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.desktop__center__buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.desktop__center__timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.desktop__timer__time {
+    margin: 0 10px;
+    font-size: 13px;
+    color: var(--text-color);
+}
+
+.desktop__buttons__button {
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    transition: all 200ms;
+}
+
+.desktop__buttons__button:hover {
+    cursor: pointer;
+    color: white;
+}
+
+.desktop__buttons__button:active {
+    padding: 0;
+}
+
+.desktop__buttons__button:active .button__icon {
+    font-size: 15px;
+}
+
+.desktop__button__icon {
+    font-size: 18px;
+}
+
+.desktop__buttons__button:focus {
+    outline: 0;
+}
+
+.desktop__buttons__button::-moz-focus-inner {
+    border: 0;
+}
+
+.desktop__buttons__button--play {
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+.desktop__playback__rightside {
+    grid-column-start: 3;
+    grid-column-end: 3;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.desktop__rightside__volumeIcon {
+    margin: 0 10px;
+    color: var(--text-color);
+}

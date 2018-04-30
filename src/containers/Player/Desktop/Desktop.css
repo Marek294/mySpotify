@@ -1,4 +1,4 @@
-.player {
+.desktop__player {
     display: grid;
     min-height: 100vh;
 
@@ -10,7 +10,7 @@
     background-color: transparent;
 }
 
-.player__content {
+.desktop__player__content {
     grid-area: content;
     overflow: hidden;
     overflow-y: scroll;

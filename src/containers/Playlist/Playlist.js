@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import { getPlaylist } from '../../actions/playlist';
-
-import './Playlist.css';
+import isMobile from '../../utils/isMobile';
+import Desktop from './Desktop/Desktop';
+import Mobile from './Mobile/Mobile';
 
 class Playlist extends Component {
     state = {
@@ -42,14 +41,22 @@ class Playlist extends Component {
             const { 
                 track_window: {
                     current_track: {
-                        id
+                        id,
+                        linked_from
                     }
                 }
             } = playerState;
 
             const { currentlyPlayingId } = prevState;
 
-            if(id !== currentlyPlayingId) {
+
+            if(linked_from.id && linked_from.id !== currentlyPlayingId) {
+                return {
+                    currentlyPlayingId: linked_from.id
+                }
+            }
+
+            if(!linked_from.id && id !== currentlyPlayingId) {
                 return {
                     currentlyPlayingId: id
                 }
@@ -87,7 +94,7 @@ class Playlist extends Component {
     render() {
         const { playlist, display, currentlyPlayingId } = this.state;
 
-        let name, description, images, owner, tracks, tracksDisplay;
+        let name, description, images, owner, tracks;
 
         if(display) {
             ({
@@ -97,56 +104,22 @@ class Playlist extends Component {
                 owner,
                 tracks
             } = playlist)
+        }
 
-            tracksDisplay = tracks.items.map((item,i) => {
-                const { track } = item;
-
-                const {
-                    album: {
-                        name : albumName,
-                        id : albumId
-                    },
-                    name,
-                    artists,
-                    duration_ms,
-                    id
-                } = track;
-
-                const displayArtists = artists.map((item,i) => {
-                    return (<Link to={`/artist/${item.id}`} key={i} className='artistsAlbum__item' >{item.name}</Link>);
-                });
-                
-
-                return (
-                    <li key={i} className='tracks__track' onDoubleClick={position => this.playSong(i)}>
-                        <div className='track__info'>
-                            <h2 className={classnames('track__name',id === currentlyPlayingId && 'track__name--playing')}>{name}</h2>
-                            <div className='track__artistsAlbum'>
-                                <ul className='artistsAlbum__artists'>{displayArtists}</ul>
-                                <p className='artistsAlbum__separator'>&bull;</p>
-                                <Link to={`/album/${albumId}`} className='artistsAlbum__item'>{albumName}</Link>
-                            </div>
-                        </div>
-                        <p className='track__duration'>{this.displayDuration(duration_ms)}</p>
-                    </li>
-                )
-            })
+        const props = {
+            name,
+            description,
+            images,
+            owner,
+            tracks,
+            currentlyPlayingId,
+            displayDuration: this.displayDuration,
+            playSong: this.playSong
         }
 
         return (
             display &&
-            <div className='playlist'>
-                <div className='playlist__info'>
-                    <img src={images[0].url} alt ='' className='info__image' />
-                    <h2 className='info__title'>{name}</h2>
-                    <p className='info__font14 info__owner'>{owner.display_name}</p>
-                    <p className='info__font14 info__description'>{description}</p>
-                    <p className='info__font14 info__tracksNumber'>Utworów: {tracks.total}</p>
-                </div>
-                <ul className='playlist__tracks'>
-                    {tracksDisplay}
-                </ul>
-            </div>
+                (isMobile() ? <Mobile {...props} /> : <Desktop {...props} />)
         )
     }
 }

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Range from '../../components/Range/Range';
-import CurrentlyPlaying from '../../components/CurrentlyPlaying/CurrentlyPlaying';
 import { play, pause, previous, next } from '../../actions/player';
+import isMobile from '../../utils/isMobile';
+import Mobile from './Mobile/Mobile';
+import Desktop from './Desktop/Desktop';
 
 import './Playback.css';
 
@@ -119,7 +120,7 @@ class Playback extends Component {
         this.startTimer();
     }
 
-    tooglePlay = () => {
+    togglePlay = () => {
         this.props.togglePlay();
     }
 
@@ -135,29 +136,23 @@ class Playback extends Component {
         const { volume_percent, progress_ms, duration_ms, is_playing } = this.state;
         const { trackData } = this.props;
 
+        const props = {
+            volume_percent,
+            progress_ms,
+            duration_ms,
+            is_playing,
+            trackData,
+            previousTrack: this.previousTrack,
+            nextTrack: this.nextTrack,
+            togglePlay: this.togglePlay,
+            changePosition: this.changePosition,
+            seek: this.seek,
+            displayTime: this.displayTime,
+            changeVolume: this.changeVolume
+        }
+
         return (
-            <div className='playback'>
-                <div className='playback__leftside'>
-                    <CurrentlyPlaying trackData={trackData} />
-                </div>
-                <div className='playback__center'>
-                    <div className='center__buttons'>
-                        <button onClick={this.previousTrack} className='buttons__button'><i className="button__icon fas fa-step-backward"></i></button>
-                        { !is_playing && <button onClick={this.tooglePlay} className='buttons__button buttons__button--play'><i className="button__icon fas fa-play"></i></button>}
-                        { is_playing && <button onClick={this.tooglePlay} className='buttons__button buttons__button--play'><i className="button__icon fas fa-pause"></i></button>}
-                        <button onClick={this.nextTrack} className='buttons__button'><i className="button__icon fas fa-step-forward"></i></button>
-                    </div>
-                    <div className='center__timer'>
-                    <p className='timer__time'>{this.displayTime(progress_ms)}</p>
-                    <Range max={duration_ms} width='100%' value={progress_ms} onChange={this.changePosition} onMouseUp={this.seek} />
-                    <p className='timer__time'>{this.displayTime(duration_ms)}</p>
-                    </div>
-                </div>
-                <div className='playback__rightside'>
-                    <i className='rightside__volumeIcon fas fa-volume-up'></i>
-                    <Range max={100} width='150px' value={volume_percent} onChange={this.changeVolume} />
-                </div>
-            </div>
+            isMobile() ? <Mobile {...props} /> : <Desktop {...props} />
         );
     }
 }

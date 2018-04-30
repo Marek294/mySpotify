@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
+import isMobile from '../../../utils/isMobile';
 
 import './Featured.css';
 
@@ -30,12 +31,12 @@ const Featured = (props) => {
                     <div className={classnames('item__imageContainer', (item.uri === contextUri && !paused)  && 'item__imageContainer--playing')}>
                         <img src={item.images[0].url} alt='' className='item__image' />
                         <Link to={`../user/spotify/playlist/${item.id}`} className='item__overlay'></Link>
-                        { (item.uri === contextUri && !paused) && 
+                        { ( (!isMobile() && item.uri === contextUri) && !paused) && 
                             <button className='overlay__icon' onClick={context_uri => playContext(item.uri)}>
                                 <i className='fas fa-pause'></i>
                             </button> 
                         }
-                        { (item.uri !== contextUri || (item.uri === contextUri && paused)) &&
+                        { ( (!isMobile() && item.uri !== contextUri) || (item.uri === contextUri && paused)) &&
                             <button className='overlay__icon' onClick={context_uri => playContext(item.uri)}>
                                 <i className='fas fa-play'></i>
                             </button>

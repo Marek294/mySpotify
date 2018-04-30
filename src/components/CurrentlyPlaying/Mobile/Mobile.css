@@ -1,0 +1,22 @@
+.mobile__currentlyplaying {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.mobile__currentlyplaying__track__name {
+    white-space: nowrap;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    width: 100%;
+    font-size: 14px;
+    margin: 0;
+    text-align: center;
+}
+
+.mobile__currentlyplaying__track__artists {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin: 0;
+    text-align: center;
+}

@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Switch, Route } from 'react-router-dom';
-import Browse from '../Browse/Browse';
-import Collection from '../Collection/Collection';
-import Playback from '../Playback/Playback';
-import Sidebar from '../../components/Sidebar/Sidebar';
-import Playlist from '../../containers/Playlist/Playlist';
+import Desktop from './Desktop/Desktop';
+import Mobile from './Mobile/Mobile';
 import Loader from '../../components/Loader/Spinner';
+import isMobile from '../../utils/isMobile';
 import { getPlayer, play, pause, currentlyPlaying, boundPushState } from '../../actions/player';
 import { logout } from '../../actions/auth';
 import { getUserSavedTracks } from '../../actions/tracks';
-
-import './Player.css';
 
 async function waitForSpotifyWebPlaybackSDKToLoad () {
     return new Promise(resolve => {
@@ -276,28 +271,21 @@ class Player extends Component {
         const { player, trackData } = this.state;
         const { location } = this.props;
 
+        const props = {
+            location,
+            trackData,
+            setVolume: this.setVolume,
+            seek: this.seek,
+            togglePlay: this.togglePlay,
+            nextTrack: this.nextTrack,
+            previousTrack: this.previousTrack,
+            playContext: this.playContext,
+            playSong: this.playSong,
+        }
+
         return (
             Object.keys(player).length === 0 ? <Loader /> : 
-                <div className='player'>
-                    <Sidebar location={location} />
-                    <Playback
-                        trackData={trackData}
-                        setVolume={this.setVolume}
-                        seek={this.seek}
-                        togglePlay={this.togglePlay}
-                        nextTrack={this.nextTrack}
-                        // getCurrentState={this.getCurrentState}
-                        previousTrack={this.previousTrack} />
-
-                    <div className="player__content">
-                    <Switch>
-                        <Route path='/browse' render={props => <Browse {...props} playContext={this.playContext} />} />
-                        <Route path='/collection' component={Collection} />
-                        <Route path='/user/spotify/playlist/:id' render={props => <Playlist {...props} playSong={this.playSong} />} />
-                        <Redirect to='/browse' />
-                    </Switch>
-                    </div>
-                </div>
+                    isMobile() ? <Mobile {...props} /> : <Desktop {...props} />
         );
     }
 }

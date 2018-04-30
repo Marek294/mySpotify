@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import scrollTo from '../../utils/scrollToAnimate';
-
-import './CurrentlyPlaying.css';
+import isMobile from '../../utils/isMobile';
+import Mobile from './Mobile/Mobile';
+import Desktop from './Desktop/Desktop';
 
 class CurrentlyPlaying extends Component {
     state = {
@@ -59,15 +60,15 @@ class CurrentlyPlaying extends Component {
                 return item.name;
             }) : null;
 
+        const props = {
+            images,
+            displayArtists,
+            name
+        }
+
         return (
-            display ?
-            <div className='currentlyplaying'>
-                <img src={images[0].url} alt="" className='currentlyplaying__image' />
-                <div className='currentlyplaying__track' >
-                <p className='track__name' onMouseOver={this.onMouseOver}>{name}</p>
-                <p className='track__artists'>{displayArtists.join(', ')}</p>
-                </div>
-            </div> : null
+            display &&
+                (isMobile() ? <Mobile {...props} /> : <Desktop {...props} />)
         );
     }
 }

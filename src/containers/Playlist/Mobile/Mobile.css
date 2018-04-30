@@ -1,24 +1,21 @@
-.playlist {
-    display: grid;
-    height: 100%;
+.mobile__playlist {
+    display: flex;
 
-    grid-template-columns: 340px auto;
-    grid-template-areas: 'info tracks';
+    flex-direction: column;
 }
 
-.playlist__info {
-    grid-area: info;
-    padding: 150px 20px;
+.mobile__playlist__info {
+    padding: 20px;
 }
 
-.playlist__tracks {
+.mobile__playlist__tracks {
     grid-area: tracks;
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.info__image {
+.mobile__info__image {
     --size: 240px;
     width: var(--size);
     height: var(--size);
@@ -26,36 +23,36 @@
     margin: 0 auto;
 }
 
-.info__title {
+.mobile__info__title {
     text-align: center;
     font-size: 25px;
     font-weight: 800;
     margin-bottom: 0;
 }
 
-.info__font14 {
+.mobile__info__font14 {
     font-size: 14px;
 }
 
-.info__owner {
+.mobile__info__owner {
     text-align: center;
     color: var(--text-color);
     margin: 5px;
 }
 
-.info__description {
+.mobile__info__description {
     text-align: center;
     color: var(--text-color);
 }
 
-.info__tracksNumber {
+.mobile__info__tracksNumber {
     text-transform: uppercase;
     color: var(--text-color);
     text-align: center;
     letter-spacing: 2px;
 }
 
-.tracks__track {
+.mobile__tracks__track {
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -70,79 +67,62 @@
                                   supported by Chrome and Opera */
 }
 
-.tracks__track:hover {
+.mobile__tracks__track:hover {
     background: rgba(0,0,0,0.3);
-    cursor: pointer;
 }
 
-.track__info {
+.mobile__track__info {
     padding-right: 20px;
 }
 
-.track__name {
+.mobile__track__name {
     font-weight: 400;
     width: 100%;
     margin: 5px 0;
+    font-size: 14px;
 }
 
-.track__name--playing {
+.mobile__track__name--playing {
     color: var(--green) !important;
 }
 
-.track__artistsAlbum {
+.mobile__track__artistsAlbum {
     font-size: 14px;
     margin: 0;
 }
 
-.artistsAlbum__separator {
+.mobile__artistsAlbum__separator {
     display: inline-block;
     vertical-align: middle;
     margin: 0 10px;
     font-size: 6px;
 }
 
-.artistsAlbum__artists {
+.mobile__artistsAlbum__artists {
     list-style: none; 
     margin: 0; 
     padding: 0; 
     display: inline;
 }
 
-.artistsAlbum__item {
+.mobile__artistsAlbum__item {
     color: var(--text-color);
     text-decoration: none;
     display: inline;
     transition: all 200ms;
 }
 
-.artistsAlbum__item:hover {
-    text-decoration: underline;
-    color: white;
-}
-
-.artistsAlbum__item:after {
+.mobile__artistsAlbum__item:after {
     content: ', ';
     margin-right: 2px;
 }
 
-.artistsAlbum__item:last-child:after {
+.mobile__artistsAlbum__item:last-child:after {
     content: '';
     margin-right: 0;
 }
 
-.track__duration {
+.mobile__track__duration {
     color: var(--text-color);
     font-size: 14px;
-}
-
-@media (max-width: 400px) {
-    .playlist {
-        display: flex;
-
-        flex-direction: column;
-    }
-
-    .playlist__info {
-        padding: 20px;
-    }
 }

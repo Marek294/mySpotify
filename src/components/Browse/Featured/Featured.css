@@ -11,6 +11,7 @@
     margin: 5px;
     color: white;
     text-decoration: none;
+    width: 200px;
 }
 
 .item__imageButton {
@@ -97,4 +98,25 @@
     text-align: center;
     margin-top: 5px;
     font-size: 14px;
+}
+
+@media (max-width: 400px) {
+    .featured__playlists {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .playlists__item {
+        margin: 5px;
+        color: white;
+        text-decoration: none;
+        width: 100px;
+    }
+
+    .item__imageButton {
+        --size: 100px;
+        height: var(--size);
+        width: var(--size);
+    }
 }
